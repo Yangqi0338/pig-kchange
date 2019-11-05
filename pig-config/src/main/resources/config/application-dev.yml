@@ -1,0 +1,139 @@
+# 加解密根密码
+jasypt:
+  encryptor:
+    password: pig #根密码
+
+# Spring 相关
+spring:
+  #      HTTP消息转换的首选JSON映射器
+  http:
+    converters:
+      #      TTP请求响应切换GSON
+      preferred-json-mapper: gson
+  gson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    #    是否禁用HTML字符的转义，例如'<'，'>'等
+    disable-html-escaping: true
+    #    是否在内容类中排除内部类序列化
+    disable-inner-class-serialization: true
+    #    是否启用复杂映射键（即非基元）的序列化
+    enable-complex-map-key-serialization: true
+    #    是否排除所有不考虑序列化或反序列化但没有“Expose”注释的字段。
+    #    exclude-fields-without-expose-annotation: true
+    #    是否通过在输出前添加一些特殊文本来生成不可执行的JSON
+    #    generate-non-executable-json: false
+    #    是否执行JSON生成标准
+    lenient: true
+    #    是否打印控制台
+    pretty-printing: true
+    #    是否序列化空字段
+    serialize-nulls: true
+    #    序列化策略
+    long-serialization-policy: default
+    #    在序列化和反序列化期间应该应用于对象字段的命名策略。
+    field-naming-policy: identity
+  redis:
+    password:
+    host: 210.21.48.76
+    port: 3578
+  # zipkin
+  zipkin:
+    enabled: true
+    base-url: http://pig-zipkin
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      # 默认的采样比率为0.1，不能看到所有请求数据
+      # 更改采样比率为1，就能看到所有的请求数据了，但是这样会增加接口调用延迟
+      probability: 1.0
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# feign 配置
+feign:
+  hystrix:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+# hystrix 配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 60000
+  shareSecurityContext: true
+
+#请求处理的超时时间
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+
+# mybaits-plus配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      table-underline: true
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 分页配置
+pagehelper:
+  support-methods-arguments: true
+  reasonable: true
+  params: count\=countSql
+  offset-as-page-num: true
+  row-bounds-with-count: true
+
+#  api 文档
+swagger:
+  base-package: com.pig4cloud.pig
+  title: Swagger API
+  license: Powered By Pig
+#  licenseUrl: https://pig4cloud.com/
+#  terms-of-service-url: https://pig4cloud.com/
+  contact:
+    email: wangiegie@gmail.com
+    url: https://pig4cloud.com/about.html
+  authorization:
+    name: pig OAuth
+    auth-regex: ^.*$
+    authorization-scope-list:
+      - scope: server
+        description: server all
+    token-url-list:
+      - http://pig-gateway:9999/auth/oauth/token
+
+# spring security 配置
+security:
+  oauth2:
+    resource:
+      loadBalanced: true
+      token-info-uri: http://pig-auth/oauth/check_token

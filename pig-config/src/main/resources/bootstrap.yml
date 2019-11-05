@@ -1,0 +1,40 @@
+server:
+  port: 8888
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-paths:
+        - src/main/java
+        - src/main/resources
+    #      exclude: templates/**
+    add-properties: true
+  application:
+    name: pig-config
+  profiles:
+    active: native
+  # 配置中心
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config/,classpath:/config/dev,classpath:/config/test,classpath:/config/prod
+
+# 注册中心配置
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://pig:pig@pig-eureka:8761/eureka/
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  config: classpath:logback-spring.xml
