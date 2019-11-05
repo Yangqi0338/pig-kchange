@@ -15,10 +15,6 @@
 - 提供 lambda 、stream api 、webflux 的生产实践   
 
 
-<a href="http://pig4cloud.com/doc/pig" target="_blank">部署文档</a> | <a target="_blank" href="http://avue.top"> 前端解决方案</a> | <a target="_blank" href="https://gitee.com/log4j/pig/releases/v1.3.2"> 1.0  版本</a> | <a target="_blank" href="http://pigx.pig4cloud.com"> PigX在线体验</a>
-    
-
-
 
 #### 快速构架微服务应用  
 
@@ -65,18 +61,4 @@ pig
 1. 欢迎提交 issue，请写清楚遇到问题的原因，开发环境，复显步骤。
 
 2. 不接受`功能请求`的 issue，功能请求可能会被直接关闭。  
-
-3. <a href="mailto:pig4cloud@qq.com">pig4cloud@qq.com</a>    
-
-4. <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2270033969&site=qq&menu=yes"> 个人QQ: 2270033969</a>
-
-#### 开源协议
-
-
-![](https://images.gitee.com/uploads/images/2019/0330/065147_e07bc645_410595.png)
-
-
-#### 交流群
-
-![](http://pigx.vip/20191030001916_Elfble_%E5%BE%AE%E4%BF%A1%E7%BE%A4.jpeg)
 
