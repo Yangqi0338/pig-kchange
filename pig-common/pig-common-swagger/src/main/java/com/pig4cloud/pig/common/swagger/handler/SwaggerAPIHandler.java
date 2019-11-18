@@ -9,12 +9,6 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import springfox.documentation.swagger.web.*;
 
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-import static org.springframework.web.reactive.function.server.ServerResponse.status;
-
 /**
  * 网关处理 swagger api
  *
@@ -24,12 +18,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.st
  */
 @Slf4j
 @Component
-public class SwaggerAPIHandler implements HandlerFunction<ServerResponse> {
-
-    public static final String SWAGGER_UI = "/swagger-resources/configuration/ui";
-    /**swagger api */
-    public static final String SWAGGER_RESOURCES = "/swagger-resources";
-    public static final String SWAGGER_SECURITY = "/swagger-resources/configuration/security";
+public class SwaggerAPIHandler extends BaseHandler implements HandlerFunction<ServerResponse> {
 
     @Autowired(required = false)
     private UiConfiguration uiConfiguration;
@@ -54,7 +43,7 @@ public class SwaggerAPIHandler implements HandlerFunction<ServerResponse> {
         Mono response = null;
         switch (request.path()) {
             case SWAGGER_RESOURCES:
-                response = createMono(swaggerResources, null);
+                response = createMono(swaggerResources.get(), null);
                 break;
             case SWAGGER_UI:
                 response = createMono(uiConfiguration, UiConfigurationBuilder.builder().build());
@@ -65,17 +54,5 @@ public class SwaggerAPIHandler implements HandlerFunction<ServerResponse> {
         }
         return response;
     }
-
-    /**
-     * 创建MONO
-     *
-     * @param t
-     * @return
-     */
-    private <T, E> Mono<ServerResponse> createMono(T t, E e) {
-        return status(OK).contentType(APPLICATION_JSON_UTF8)
-                .body(fromObject(t instanceof SwaggerResourcesProvider ? swaggerResources.get() : ofNullable(t).orElse((T) e)));
-    }
-
 
 }

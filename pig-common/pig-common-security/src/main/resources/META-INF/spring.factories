@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.springframework.cloud.openfeign.HystrixFeignTargeterAutoConfigurationPlus,\
-  com.pig4cloud.pig.common.security.service.PigUserDetailsServiceImpl

@@ -20,8 +20,8 @@ import static org.springframework.cloud.gateway.support.NameUtils.GENERATED_NAME
  * @author Sywd
  * 聚合接口文档注册，和zuul实现类似
  */
-@Component
 @Primary
+@Component
 @AllArgsConstructor
 public class SwaggerProvider implements SwaggerResourcesProvider {
     private static final String API_URI = "/v2/api-docs";

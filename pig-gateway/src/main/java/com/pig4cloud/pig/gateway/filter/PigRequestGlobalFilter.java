@@ -13,8 +13,12 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.FROM;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.addOriginalRequestUrl;
+import static org.springframework.util.StringUtils.tokenizeToStringArray;
 
 /**
  * @author lengleng
@@ -41,23 +45,22 @@ public class PigRequestGlobalFilter implements GlobalFilter, Ordered {
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 		// 1. 清洗请求头中from 参数
-		ServerHttpRequest request = exchange.getRequest().mutate()
-			.headers(httpHeaders -> httpHeaders.remove(SecurityConstants.FROM))
+		ServerHttpRequest request = exchange.getRequest().mutate().headers(httpHeaders -> httpHeaders.remove(FROM))
 			.build();
 
 		// 2. 重写StripPrefix
 		addOriginalRequestUrl(exchange, request.getURI());
-		String rawPath = request.getURI().getRawPath();
-		String newPath = "/" + Arrays.stream(StringUtils.tokenizeToStringArray(rawPath, "/"))
-			.skip(1L).collect(Collectors.joining("/"));
-		ServerHttpRequest newRequest = request.mutate()
-			.path(newPath)
-			.build();
+
+		// 重新拼接请求路径
+		String newPath = "/" + stream(tokenizeToStringArray(request.getURI().getRawPath(), "/")).skip(1L)
+				.collect(joining("/"));
+
+		// 获取新的请求对象
+		ServerHttpRequest newRequest = request.mutate().path(newPath).build();
+
 		exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, newRequest.getURI());
 
-		return chain.filter(exchange.mutate()
-			.request(newRequest.mutate()
-				.build()).build());
+		return chain.filter(exchange.mutate().request(newRequest.mutate().build()).build());
 	}
 
 	@Override

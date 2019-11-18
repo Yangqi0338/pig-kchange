@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
  * Spring 工具类
  */
 @Slf4j
-@Service
+@Component
 @Lazy(false)
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 

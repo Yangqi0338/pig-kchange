@@ -38,5 +38,4 @@ logging:
     com.netflix: warn
     com.ulisesbocchio.jasyptspringboot: warn
   config: classpath:logback-spring.xml
-ribbon:
-  ConnectTimeout: 1000
+

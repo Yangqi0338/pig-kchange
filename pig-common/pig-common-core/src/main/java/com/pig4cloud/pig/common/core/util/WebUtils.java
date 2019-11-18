@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author L.cm
  */
+//@Component
 @Slf4j
 @UtilityClass
 public class WebUtils extends org.springframework.web.util.WebUtils {

@@ -23,6 +23,14 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static cn.hutool.core.util.CharsetUtil.UTF_8;
+import static cn.hutool.core.util.StrUtil.containsAnyIgnoreCase;
+import static cn.hutool.core.util.StrUtil.isNotBlank;
+import static cn.hutool.crypto.Mode.CBC;
+import static cn.hutool.crypto.Padding.NoPadding;
+import static cn.hutool.http.HttpUtil.toParams;
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.OAUTH_TOKEN_URL;
+
 /**
  * @author lengleng
  * @date 2019/2/1
@@ -37,10 +45,12 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory {
 	private String encodeKey;
 
 	private static String decryptAES(String data, String pass) {
-		AES aes = new AES(Mode.CBC, Padding.NoPadding,
-			new SecretKeySpec(pass.getBytes(), KEY_ALGORITHM),
-			new IvParameterSpec(pass.getBytes()));
+
+		AES aes = new AES(CBC, NoPadding,new SecretKeySpec(pass.getBytes(), KEY_ALGORITHM),
+				new IvParameterSpec(pass.getBytes()));
+
 		byte[] result = aes.decrypt(Base64.decode(data.getBytes(StandardCharsets.UTF_8)));
+
 		return new String(result, StandardCharsets.UTF_8);
 	}
 
@@ -50,16 +60,15 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory {
 			ServerHttpRequest request = exchange.getRequest();
 
 			// 不是登录请求，直接向下执行
-			if (!StrUtil.containsAnyIgnoreCase(request.getURI().getPath(), SecurityConstants.OAUTH_TOKEN_URL)) {
+			if (!containsAnyIgnoreCase(request.getURI().getPath(), OAUTH_TOKEN_URL)) {
 				return chain.filter(exchange);
 			}
 
 			URI uri = exchange.getRequest().getURI();
-			String queryParam = uri.getRawQuery();
-			Map<String, String> paramMap = HttpUtil.decodeParamMap(queryParam, CharsetUtil.UTF_8);
+			Map<String, String> paramMap = HttpUtil.decodeParamMap(uri.getRawQuery(), UTF_8);
 
 			String password = paramMap.get(PASSWORD);
-			if (StrUtil.isNotBlank(password)) {
+			if (isNotBlank(password)) {
 				try {
 					password = decryptAES(password, encodeKey);
 				} catch (Exception e) {
@@ -69,10 +78,7 @@ public class PasswordDecoderFilter extends AbstractGatewayFilterFactory {
 				paramMap.put(PASSWORD, password.trim());
 			}
 
-			URI newUri = UriComponentsBuilder.fromUri(uri)
-				.replaceQuery(HttpUtil.toParams(paramMap))
-				.build(true)
-				.toUri();
+			URI newUri = UriComponentsBuilder.fromUri(uri).replaceQuery(toParams(paramMap)).build(true).toUri();
 
 			ServerHttpRequest newRequest = exchange.getRequest().mutate().uri(newUri).build();
 			return chain.filter(exchange.mutate().request(newRequest).build());

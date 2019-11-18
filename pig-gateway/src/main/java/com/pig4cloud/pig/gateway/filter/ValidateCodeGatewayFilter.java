@@ -26,7 +26,9 @@ import static cn.hutool.core.util.StrUtil.containsAnyIgnoreCase;
 import static cn.hutool.core.util.StrUtil.utf8Bytes;
 import static com.pig4cloud.pig.common.core.constant.CommonConstants.DEFAULT_CODE_KEY;
 import static com.pig4cloud.pig.common.core.constant.SecurityConstants.OAUTH_TOKEN_URL;
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.REFRESH_TOKEN;
 import static org.springframework.http.HttpStatus.PRECONDITION_REQUIRED;
+import static reactor.core.publisher.Mono.just;
 
 /**
  * @author lengleng
@@ -47,14 +49,13 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory {
 			ServerHttpRequest request = exchange.getRequest();
 
 			// 不是登录请求，直接向下执行
-			if (!containsAnyIgnoreCase(request.getURI().getPath()
-				, OAUTH_TOKEN_URL)) {
+			if (!containsAnyIgnoreCase(request.getURI().getPath(), OAUTH_TOKEN_URL)) {
 				return chain.filter(exchange);
 			}
 
 			// 刷新token，直接向下执行
 			String grantType = request.getQueryParams().getFirst("grant_type");
-			if (StrUtil.equals(SecurityConstants.REFRESH_TOKEN, grantType)) {
+			if (StrUtil.equals(REFRESH_TOKEN, grantType)) {
 				return chain.filter(exchange);
 			}
 
@@ -68,11 +69,12 @@ public class ValidateCodeGatewayFilter extends AbstractGatewayFilterFactory {
 				//校验验证码
 				checkCode(request);
 			} catch (Exception e) {
+
 				ServerHttpResponse response = exchange.getResponse();
 				response.setStatusCode(PRECONDITION_REQUIRED);
+
 				try {
-					return response.writeWith(Mono.just(response.bufferFactory()
-						.wrap(
+					return response.writeWith(just(response.bufferFactory().wrap(
 								utf8Bytes(gson.toJson(R.failed(e.getMessage())))
 						)));
 				} catch (Exception e1) {

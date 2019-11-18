@@ -16,12 +16,14 @@ import org.springframework.web.client.RestTemplate;
  */
 @ComponentScan("com.pig4cloud.pig.common.security")
 public class PigResourceServerAutoConfiguration {
+
 	@Bean
 	@Primary
 	@LoadBalanced
 	public RestTemplate lbRestTemplate() {
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+		restTemplate.setErrorHandler(
+				new DefaultResponseErrorHandler() {
 			@Override
 			@SneakyThrows
 			public void handleError(ClientHttpResponse response) {
@@ -32,4 +34,5 @@ public class PigResourceServerAutoConfiguration {
 		});
 		return restTemplate;
 	}
+
 }
