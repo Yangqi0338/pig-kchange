@@ -1,7 +1,5 @@
 package com.pig4cloud.pig.common.security.feign;
 
-import cn.hutool.core.collection.CollUtil;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.security.oauth2.client.AccessTokenContextRelay;
@@ -10,6 +8,10 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 
 import java.util.Collection;
+
+import static cn.hutool.core.collection.CollUtil.isNotEmpty;
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.FROM;
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.FROM_IN;
 
 /**
  * @author lengleng
@@ -46,14 +48,13 @@ public class PigFeignClientInterceptor extends OAuth2FeignRequestInterceptor {
 	 */
 	@Override
 	public void apply(RequestTemplate template) {
-		Collection<String> fromHeader = template.headers().get(SecurityConstants.FROM);
-		if (CollUtil.isNotEmpty(fromHeader) && fromHeader.contains(SecurityConstants.FROM_IN)) {
+		Collection<String> fromHeader = template.headers().get(FROM);
+		if (isNotEmpty(fromHeader) && fromHeader.contains(FROM_IN)) {
 			return;
 		}
 
 		accessTokenContextRelay.copyToken();
-		if (oAuth2ClientContext != null
-			&& oAuth2ClientContext.getAccessToken() != null) {
+		if (oAuth2ClientContext != null && oAuth2ClientContext.getAccessToken() != null) {
 			super.apply(template);
 		}
 	}

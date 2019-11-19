@@ -58,8 +58,6 @@ management:
 
 # feign 配置
 feign:
-  hystrix:
-    enabled: true
   okhttp:
     enabled: true
   httpclient:

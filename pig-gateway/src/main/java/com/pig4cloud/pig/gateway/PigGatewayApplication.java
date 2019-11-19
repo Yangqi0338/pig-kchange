@@ -13,8 +13,8 @@ import org.springframework.cloud.client.SpringCloudApplication;
  * <p>
  * 网关应用
  */
-@EnableAutoConfiguration(exclude = {JacksonAutoConfiguration.class})
 @EnableGatewaySwagger2
+@EnableAutoConfiguration(exclude = {JacksonAutoConfiguration.class})
 @SpringCloudApplication
 public class PigGatewayApplication {
 
