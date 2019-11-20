@@ -12,6 +12,7 @@ import net.dreamlu.mica.feign.MicaFeignAutoConfiguration;
 import net.dreamlu.mica.feign.MicaFeignRequestHeaderInterceptor;
 import net.dreamlu.mica.feign.MicaSpringMvcContract;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -45,12 +46,15 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class PigFeignClientConfiguration {
 
+	@Autowired
+	private OAuth2ProtectedResourceDetails details;
+	@Autowired
+	private AccessTokenContextRelay relay;
+
 	@Bean
 	@ConditionalOnMissingBean
-	public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext,
-															OAuth2ProtectedResourceDetails resource,
-															AccessTokenContextRelay accessTokenContextRelay) {
-		return new PigFeignClientInterceptor(oAuth2ClientContext, resource, accessTokenContextRelay);
+	public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext) {
+		return new PigFeignClientInterceptor(oAuth2ClientContext, details, relay);
 	}
 
 	@Configuration("hystrixFeignConfiguration")

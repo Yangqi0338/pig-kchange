@@ -1,6 +1,5 @@
 package com.pig4cloud.pig.admin.api.feign;
 
-import com.pig4cloud.pig.admin.api.feign.factory.RemoteTokenServiceFallbackFactory;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.constant.ServiceNameConstants;
 import com.pig4cloud.pig.common.core.util.R;

@@ -1,7 +1,6 @@
 package com.pig4cloud.pig.admin.api.feign;
 
 import com.pig4cloud.pig.admin.api.entity.SysLog;
-import com.pig4cloud.pig.admin.api.feign.factory.RemoteLogServiceFallbackFactory;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.constant.ServiceNameConstants;
 import com.pig4cloud.pig.common.core.util.R;

@@ -32,6 +32,11 @@
 			<groupId>org.springframework.security.oauth.boot</groupId>
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
 		</dependency>
+		<!--feign 依赖-->
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-okhttp</artifactId>
+		</dependency>
 		<!--UPMS API-->
 		<dependency>
 			<groupId>com.pig4cloud</groupId>
