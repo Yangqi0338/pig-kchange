@@ -16,7 +16,7 @@
     <properties>
         <pig.version>2.4.4</pig.version>
         <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
+        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>
         <spring-platform.version>Cairo-SR8</spring-platform.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -26,7 +26,7 @@
         <mica.version>1.2.0</mica.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
-        <velocity.version>1.7</velocity.version>
+        <velocity.version>2.1</velocity.version>
         <jasypt.version>2.1.0</jasypt.version>
         <security.oauth.version>2.3.6.RELEASE</security.oauth.version>
         <swagger.fox.version>2.9.2</swagger.fox.version>

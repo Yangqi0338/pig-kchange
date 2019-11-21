@@ -35,19 +35,15 @@ spring:
             - name: RequestRateLimiter
               args:
                 key-resolver: '#{@remoteAddrKeyResolver}'
+                #  允许用户每秒处理多少个请求
                 redis-rate-limiter.replenishRate: 10
+                # 令牌桶的容量，允许在一秒钟内完成的最大请求数
                 redis-rate-limiter.burstCapacity: 20
               # 降级配置
             - name: Hystrix
               args:
                 name: default
                 fallbackUri: 'forward:/fallback'
-        # 代码生成模块
-#        - id: pig-codegen
-#          uri: lb://pig-codegen
-#          predicates:
-#            - Path=/gen/**
-
 
 security:
   encode:
