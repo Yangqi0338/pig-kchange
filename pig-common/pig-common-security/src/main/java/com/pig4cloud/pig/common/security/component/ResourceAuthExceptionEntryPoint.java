@@ -1,9 +1,8 @@
 package com.pig4cloud.pig.common.security.component;
 
-import cn.hutool.http.HttpStatus;
 import com.google.gson.Gson;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.util.R;
+import com.pig4cloud.pig.common.core.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
+
+import static cn.hutool.http.HttpStatus.HTTP_UNAUTHORIZED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * @author lengleng
@@ -25,22 +26,20 @@ import java.io.PrintWriter;
 @Component
 @AllArgsConstructor
 public class ResourceAuthExceptionEntryPoint implements AuthenticationEntryPoint {
-	private final Gson gson;
+    private final Gson gson;
 
-	@Override
-	@SneakyThrows
-	public void commence(HttpServletRequest request, HttpServletResponse response,
-						 AuthenticationException authException) {
-		response.setCharacterEncoding(CommonConstants.UTF8);
-		response.setContentType(CommonConstants.CONTENT_TYPE);
-		R<String> result = new R<>();
-		result.setCode(HttpStatus.HTTP_UNAUTHORIZED);
-		if (authException != null) {
-			result.setMsg("error");
-			result.setData(authException.getMessage());
-		}
-		response.setStatus(HttpStatus.HTTP_UNAUTHORIZED);
-		PrintWriter printWriter = response.getWriter();
-		printWriter.append(gson.toJson(result));
-	}
+    @Override
+    @SneakyThrows
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) {
+
+        R result = R.builder().build();
+
+        if (authException != null) {
+            result.setMsg("error").setData(authException.getMessage());
+        }
+
+        WebUtils.renderJson(response, result, APPLICATION_JSON_UTF8_VALUE, HTTP_UNAUTHORIZED, null);
+
+    }
 }

@@ -21,7 +21,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
+import static com.google.common.base.Predicates.or;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static springfox.documentation.builders.PathSelectors.ant;
@@ -56,18 +58,18 @@ public class SwaggerAutoConfiguration {
             swaggerProperties.getBasePath().add(BASE_PATH);
         }
         //noinspection unchecked
-        List<Predicate<String>> basePath = swaggerProperties.getBasePath().parallelStream().map(it -> ant(it)).collect(toList());
+        List<Predicate<String>> basePath = swaggerProperties.getBasePath().stream().map(it -> ant(it)).collect(toList());
 
         // exclude-path处理
         if (swaggerProperties.getExcludePath().isEmpty()) {
             swaggerProperties.getExcludePath().addAll(DEFAULT_EXCLUDE_PATH);
         }
-        List<Predicate<String>> excludePath = swaggerProperties.getExcludePath().parallelStream().map(it -> ant(it)).collect(toList());
+        List<Predicate<String>> excludePath = swaggerProperties.getExcludePath().stream().map(it -> ant(it)).collect(toList());
 
         //noinspection Guava
         return new Docket(SWAGGER_2).host(swaggerProperties.getHost()).apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage(swaggerProperties.getBasePackage()))
-                .paths(Predicates.and(Predicates.not(Predicates.or(excludePath)), Predicates.or(basePath)))
+                .paths(Predicates.and(Predicates.not(or(excludePath)), or(basePath)))
                 .build().securitySchemes(singletonList(securitySchema()))
                 .securityContexts(singletonList(securityContext())).pathMapping("/");
     }
@@ -90,7 +92,7 @@ public class SwaggerAutoConfiguration {
      * @return
      */
     private List<SecurityReference> defaultAuth() {
-        List<AuthorizationScope> authorizationScopeList = swaggerProperties.getAuthorization().getAuthorizationScopeList().parallelStream()
+        List<AuthorizationScope> authorizationScopeList = swaggerProperties.getAuthorization().getAuthorizationScopeList().stream()
                 .map(it -> new AuthorizationScope(it.getScope(), it.getDescription())).collect(toList());
         return singletonList(SecurityReference.builder()
                 .reference(swaggerProperties.getAuthorization().getName())
@@ -99,9 +101,9 @@ public class SwaggerAutoConfiguration {
 
 
     private OAuth securitySchema() {
-        List<AuthorizationScope> authorizationScopeList = swaggerProperties.getAuthorization().getAuthorizationScopeList().parallelStream()
+        List<AuthorizationScope> authorizationScopeList = swaggerProperties.getAuthorization().getAuthorizationScopeList().stream()
                 .map(it -> new AuthorizationScope(it.getScope(), it.getDescription())).collect(toList());
-        List<GrantType> grantTypes = swaggerProperties.getAuthorization().getTokenUrlList().parallelStream()
+        List<GrantType> grantTypes = swaggerProperties.getAuthorization().getTokenUrlList().stream()
                 .map(it -> new ResourceOwnerPasswordCredentialsGrant(it)).collect(toList());
         return new OAuth(swaggerProperties.getAuthorization().getName(), authorizationScopeList, grantTypes);
     }

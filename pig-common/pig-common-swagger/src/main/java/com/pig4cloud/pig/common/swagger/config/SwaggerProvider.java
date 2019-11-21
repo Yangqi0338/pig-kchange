@@ -33,9 +33,9 @@ public class SwaggerProvider implements SwaggerResourcesProvider {
     public List<SwaggerResource> get() {
         List<String> routes = new ArrayList<>();
         routeLocator.getRoutes().subscribe(route -> routes.add(route.getId()));
-        List<SwaggerResource> result = gatewayProperties.getRoutes().parallelStream().filter(routeDefinition -> routes.parallelStream().filter(it -> it.indexOf("auth") < 0).collect(toList()) // 过滤 auth 授权中心
-                .contains(routeDefinition.getId())).collect(toList()).parallelStream().flatMap(it ->
-                it.getPredicates().parallelStream().filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))// 过滤数据
+        List<SwaggerResource> result = gatewayProperties.getRoutes().stream().filter(routeDefinition -> routes.parallelStream().filter(it -> it.indexOf("auth") < 0).collect(toList()) // 过滤 auth 授权中心
+                .contains(routeDefinition.getId())).collect(toList()).stream().flatMap(it ->
+                it.getPredicates().stream().filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))// 过滤数据
                         .filter(predicateDefinition -> !filterIgnorePropertiesConfig.getSwaggerProviders().contains(it.getId())).map(predicateDefinition ->
                         swaggerResource(it.getId(), predicateDefinition.getArgs().get(GENERATED_NAME_PREFIX + "0").replace("/**", API_URI)))
         ).sorted(comparing(SwaggerResource::getName)).collect(toList());

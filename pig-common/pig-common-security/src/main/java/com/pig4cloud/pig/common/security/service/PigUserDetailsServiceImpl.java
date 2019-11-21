@@ -1,11 +1,9 @@
 package com.pig4cloud.pig.common.security.service;
 
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.pig4cloud.pig.admin.api.dto.UserInfo;
 import com.pig4cloud.pig.admin.api.entity.SysUser;
 import com.pig4cloud.pig.admin.api.feign.RemoteUserService;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.util.R;
 import lombok.AllArgsConstructor;
@@ -14,17 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static cn.hutool.core.util.ArrayUtil.isNotEmpty;
+import static com.pig4cloud.pig.common.core.constant.CommonConstants.STATUS_NORMAL;
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.BCRYPT;
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.ROLE;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 /**
  * 用户详细信息
@@ -71,19 +74,20 @@ public class PigUserDetailsServiceImpl implements UserDetailsService {
 
 		UserInfo info = result.getData();
 		Set<String> dbAuthsSet = new HashSet<>();
-		if (ArrayUtil.isNotEmpty(info.getRoles())) {
+
+		if (isNotEmpty(info.getRoles())) {
 			// 获取角色
-			Arrays.stream(info.getRoles()).forEach(role -> dbAuthsSet.add(SecurityConstants.ROLE + role));
+			 dbAuthsSet = asList(info.getRoles()).stream().map(it->ROLE + it).collect(toSet());
 			// 获取资源
-			dbAuthsSet.addAll(Arrays.asList(info.getPermissions()));
+			dbAuthsSet.addAll(asList(info.getPermissions()));
 
 		}
-		Collection<? extends GrantedAuthority> authorities
-			= AuthorityUtils.createAuthorityList(dbAuthsSet.toArray(new String[0]));
+
+		Collection<? extends GrantedAuthority> authorities = createAuthorityList(dbAuthsSet.stream().toArray(String[]::new));
 		SysUser user = info.getSysUser();
 
 		// 构造security用户
-		return new PigUser(user.getUserId(), user.getDeptId(), user.getUsername(), SecurityConstants.BCRYPT + user.getPassword(),
-			StrUtil.equals(user.getLockFlag(), CommonConstants.STATUS_NORMAL), true, true, true, authorities);
+		return new PigUser(user.getUserId(), user.getDeptId(), user.getUsername(), BCRYPT + user.getPassword(),
+			StrUtil.equals(user.getLockFlag(), STATUS_NORMAL), true, true, true, authorities);
 	}
 }

@@ -5,12 +5,9 @@ package com.pig4cloud.pig.common.security.component;
  * @date 2019/2/1
  */
 
-import cn.hutool.http.HttpStatus;
-import com.google.gson.Gson;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.exception.PigDeniedException;
 import com.pig4cloud.pig.common.core.util.R;
-import lombok.AllArgsConstructor;
+import com.pig4cloud.pig.common.core.util.WebUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,7 +16,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
+
+import static cn.hutool.http.HttpStatus.HTTP_FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * @author lengleng
@@ -28,26 +27,22 @@ import java.io.PrintWriter;
  */
 @Slf4j
 @Component
-@AllArgsConstructor
 public class PigAccessDeniedHandler extends OAuth2AccessDeniedHandler {
-	private final Gson gson;
 
-	/**
-	 * 授权拒绝处理，使用R包装
-	 *
-	 * @param request       request
-	 * @param response      response
-	 * @param authException authException
-	 */
-	@Override
-	@SneakyThrows
-	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException authException) {
-		log.info("授权失败，禁止访问 {}", request.getRequestURI());
-		response.setCharacterEncoding(CommonConstants.UTF8);
-		response.setContentType(CommonConstants.CONTENT_TYPE);
-		R<PigDeniedException> result = R.failed(new PigDeniedException("授权失败，禁止访问"));
-		response.setStatus(HttpStatus.HTTP_FORBIDDEN);
-		PrintWriter printWriter = response.getWriter();
-		printWriter.append(gson.toJson(result));
-	}
+    /**
+     * 授权拒绝处理，使用R包装
+     *
+     * @param request       request
+     * @param response      response
+     * @param authException authException
+     */
+    @Override
+    @SneakyThrows
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException authException) {
+
+        log.info("授权失败，禁止访问 {}", request.getRequestURI());
+
+        R<PigDeniedException> result = R.failed(new PigDeniedException("授权失败，禁止访问"));
+        WebUtils.renderJson(response, result, APPLICATION_JSON_UTF8_VALUE, HTTP_FORBIDDEN, null);
+    }
 }
