@@ -21,5 +21,6 @@
 		<module>pig-common-security</module>
         <module>pig-common-bom</module>
 		<module>pig-common-swagger</module>
-	</modules>
+        <module>pig-common-affair</module>
+    </modules>
 </project>

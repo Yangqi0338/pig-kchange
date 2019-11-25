@@ -22,7 +22,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
-        <hutool.version>5.0.3 </hutool.version>
+        <hutool.version>5.0.3</hutool.version>
         <mica.version>1.2.0</mica.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
@@ -113,14 +113,26 @@
                 <artifactId>txlcn-tc</artifactId>
                 <version>${txlcn.version}</version>
             </dependency>
+            <!--
+                        <dependency>
+                            <groupId>com.codingapi.txlcn</groupId>
+                            <artifactId>txlcn-tm</artifactId>
+                            <version>${txlcn.version}</version>
+                        </dependency>
+            -->
             <dependency>
                 <groupId>com.codingapi.txlcn</groupId>
-                <artifactId>txlcn-tm</artifactId>
+                <artifactId>txlcn-txmsg-netty</artifactId>
                 <version>${txlcn.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.codingapi.txlcn</groupId>
-                <artifactId>txlcn-txmsg-netty</artifactId>
+                <artifactId>txlcn-logger</artifactId>
+                <version>${txlcn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codingapi.txlcn</groupId>
+                <artifactId>txlcn-common</artifactId>
                 <version>${txlcn.version}</version>
             </dependency>
             <!--配置文件处理器-->
@@ -265,6 +277,12 @@
             <dependency>
                 <groupId>com.pig4cloud</groupId>
                 <artifactId>pig-common-swagger</artifactId>
+                <version>${pig.version}</version>
+            </dependency>
+            <!--事务处理-->
+            <dependency>
+                <groupId>com.pig4cloud</groupId>
+                <artifactId>pig-common-affair</artifactId>
                 <version>${pig.version}</version>
             </dependency>
         </dependencies>

@@ -28,19 +28,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 全局异常处理
 	 * @return
 	 */
-	@Bean
+/*	@Bean
 	public GlobalExceptionHandler globalExceptionHandler(){
 		return new GlobalExceptionHandler();
-	}
+	}*/
 
 	/**
 	 * 负载均衡配置
 	 * @return
 	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+//	@Bean
+//	public RestTemplate restTemplate() {
+//		return new RestTemplate();
+//	}
 
 
 	@Override

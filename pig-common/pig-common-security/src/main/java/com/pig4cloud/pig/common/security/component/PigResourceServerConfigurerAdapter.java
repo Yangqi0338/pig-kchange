@@ -30,7 +30,7 @@ import org.springframework.web.client.RestTemplate;
 public class PigResourceServerConfigurerAdapter extends ResourceServerConfigurerAdapter {
     @Autowired
     protected ResourceAuthExceptionEntryPoint resourceAuthExceptionEntryPoint;
-    @Autowired
+    @Autowired(required = false)
     protected RemoteTokenServices remoteTokenServices;
     @Autowired
     private FilterIgnorePropertiesConfig ignorePropertiesConfig;

@@ -6,6 +6,7 @@ import feign.Feign;
 import feign.RequestInterceptor;
 import feign.hystrix.HystrixFeign;
 import lombok.AllArgsConstructor;
+import net.dreamlu.mica.config.MicaAutoConfiguration;
 import net.dreamlu.mica.core.convert.EnumToStringConverter;
 import net.dreamlu.mica.core.convert.StringToEnumConverter;
 import net.dreamlu.mica.feign.MicaFeignAutoConfiguration;
@@ -42,19 +43,15 @@ import java.util.ArrayList;
 @ConditionalOnClass(Feign.class)
 @Import(MicaFeignClientsRegistrar.class)
 @AutoConfigureAfter(EnableFeignClients.class)
-@EnableAutoConfiguration(exclude = {MicaFeignAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {MicaFeignAutoConfiguration.class, MicaAutoConfiguration.class})
 @AllArgsConstructor
 public class PigFeignClientConfiguration {
 
-	@Autowired
-	private OAuth2ProtectedResourceDetails details;
-	@Autowired
-	private AccessTokenContextRelay relay;
-
 	@Bean
-	@ConditionalOnMissingBean
-	public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext) {
-		return new PigFeignClientInterceptor(oAuth2ClientContext, details, relay);
+	public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext,
+															OAuth2ProtectedResourceDetails resource,
+															AccessTokenContextRelay accessTokenContextRelay) {
+		return new PigFeignClientInterceptor(oAuth2ClientContext, resource, accessTokenContextRelay);
 	}
 
 	@Configuration("hystrixFeignConfiguration")

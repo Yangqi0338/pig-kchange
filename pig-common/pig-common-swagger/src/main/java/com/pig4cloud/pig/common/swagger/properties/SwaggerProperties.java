@@ -1,9 +1,10 @@
 package com.pig4cloud.pig.common.swagger.properties;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,16 @@ import java.util.List;
  * @date: 2018/7/25  14:00
  */
 @Data
+@Builder
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @ConfigurationProperties("swagger")
-public class SwaggerProperties {
+public class SwaggerProperties implements Serializable {
+
+	private static final long serialVersionUID = 700697746964863795L;
+
 	/**
 	 * 是否开启swagger
 	 */
