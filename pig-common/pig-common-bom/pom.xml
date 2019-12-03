@@ -22,7 +22,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
-        <hutool.version>5.0.3</hutool.version>
+        <hutool.version>5.0.7</hutool.version>
         <mica.version>1.2.0</mica.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
@@ -30,13 +30,13 @@
         <jasypt.version>2.1.0</jasypt.version>
         <security.oauth.version>2.3.6.RELEASE</security.oauth.version>
         <swagger.fox.version>2.9.2</swagger.fox.version>
-        <swagger-models.version>1.5.22</swagger-models.version>
+        <swagger-models.version>2.0.0-rc2</swagger-models.version>
         <knife4j.version>1.9.6</knife4j.version>
         <!--zipkin2.12.x需要此版本jooq-->
         <jooq.version>3.11.11</jooq.version>
         <zipkin.version>2.12.2</zipkin.version>
         <zipkin-storage-mysql.version>2.8.4</zipkin-storage-mysql.version>
-        <page-helper.version>1.2.12</page-helper.version>
+        <page-helper.version>1.2.13</page-helper.version>
         <txlcn.version>5.0.2.RELEASE</txlcn.version>
     </properties>
 
@@ -113,13 +113,6 @@
                 <artifactId>txlcn-tc</artifactId>
                 <version>${txlcn.version}</version>
             </dependency>
-            <!--
-                        <dependency>
-                            <groupId>com.codingapi.txlcn</groupId>
-                            <artifactId>txlcn-tm</artifactId>
-                            <version>${txlcn.version}</version>
-                        </dependency>
-            -->
             <dependency>
                 <groupId>com.codingapi.txlcn</groupId>
                 <artifactId>txlcn-txmsg-netty</artifactId>
