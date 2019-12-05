@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +19,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
+import static org.springframework.security.config.BeanIds.AUTHENTICATION_MANAGER;
 
 /**
  * Spring security config
@@ -48,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private Environment env;
 
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Bean(name = AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -62,27 +66,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         String ignoreURLs = env.getProperty("nacos.security.ignore.urls", "/**");
-        for (String ignoreURL : ignoreURLs.trim().split(SECURITY_IGNORE_URLS_SPILT_CHAR)) {
-            web.ignoring().antMatchers(ignoreURL.trim());
-        }
+        web.ignoring().antMatchers(Stream.of(ignoreURLs.trim().split(SECURITY_IGNORE_URLS_SPILT_CHAR)).collect(joining(",")).split(","));
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-            .anyRequest().authenticated().and()
-            // custom token authorize exception handler
-            .exceptionHandling()
-            .authenticationEntryPoint(unauthorizedHandler).and()
-            // since we use jwt, session is not necessary
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            // since we use jwt, csrf is not necessary
-            .csrf().disable();
-        http.addFilterBefore(new JwtAuthenticationTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
-
-        // disable cache
-        http.headers().cacheControl();
+                .authorizeRequests()
+                .anyRequest().authenticated().and()
+                // custom token authorize exception handler
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler).and()
+                // since we use jwt, session is not necessary
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                // since we use jwt, csrf is not necessary
+                .csrf().disable()
+                // 自定义过滤器
+                .addFilterBefore(new JwtAuthenticationTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                // disable cache
+                .headers().cacheControl();
     }
 
     @Bean
