@@ -15,15 +15,18 @@
 
     <properties>
         <pig.version>2.4.4</pig.version>
-        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>
+<!--        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
+        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>-->
+        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.1.1.RELEASE</spring-cloud-alibaba.version>
         <spring-platform.version>Cairo-SR8</spring-platform.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
         <hutool.version>5.0.7</hutool.version>
-        <mica.version>1.2</mica.version>
+        <mica.version>1.2.0</mica.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
         <velocity.version>2.1</velocity.version>
@@ -32,6 +35,8 @@
         <swagger.fox.version>2.9.2</swagger.fox.version>
         <swagger-models.version>2.0.0-rc2</swagger-models.version>
         <knife4j.version>1.9.6</knife4j.version>
+        <nacos.version>1.1.4</nacos.version>
+        <jjwt.version>0.10.6</jjwt.version>
         <!--zipkin2.12.x需要此版本jooq-->
         <jooq.version>3.11.11</jooq.version>
         <zipkin.version>2.12.2</zipkin.version>
@@ -67,6 +72,14 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--spring cloud alibaba-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -218,6 +231,35 @@
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.fox.version}</version>
+            </dependency>
+            <!-- register-->
+            <dependency>
+                <groupId>com.pig4cloud.nacos</groupId>
+                <artifactId>nacos-config</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.pig4cloud.nacos</groupId>
+                <artifactId>nacos-naming</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <!-- jwt token 加密-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <!--knife4j是为Java MVC框架集成Swagger生成Api文档的增强-->
             <dependency>

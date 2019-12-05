@@ -12,7 +12,7 @@ import org.springframework.cloud.client.SpringCloudApplication;
  * 用户统一管理系统
  */
 
-@EnableSwagger2Pro
+//@EnableSwagger2Pro
 @EnableSpringBootAntCloud
 @SpringCloudApplication
 public class PigAdminApplication {

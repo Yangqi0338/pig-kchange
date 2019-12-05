@@ -22,5 +22,5 @@
         <module>pig-common-bom</module>
 		<module>pig-common-swagger</module>
         <module>pig-common-affair</module>
-    </modules>
+	</modules>
 </project>

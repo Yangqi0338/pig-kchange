@@ -27,6 +27,7 @@
         <module>pig-common</module>
         <module>pig-zipkin</module>
         <module>pig-affair</module>
+        <module>pig-register</module>
     </modules>
 
     <dependencyManagement>
@@ -91,7 +92,7 @@
         <repository>
             <id>aliyun</id>
             <name>aliyun</name>
-            <url>https://maven.aliyun.com/repository/public</url>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -137,4 +138,5 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+    
 </project>
