@@ -1,6 +1,8 @@
 
 package com.pig4cloud.nacos.utils;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -13,8 +15,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
+import static cn.hutool.core.date.DateUtil.date;
 
 
 /**
@@ -52,14 +57,10 @@ public class JwtTokenUtils {
      */
     public String createToken(Authentication authentication) {
         /**
-         * Current time
-         */
-        long now = (new Date()).getTime();
-        /**
          * Validity date
          */
-        Date validity;
-        validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = date(date(LocalDateTime.now()).getTime() + this.tokenValidityInMilliseconds);
+//        validity = new Date(now + this.tokenValidityInMilliseconds);
 
         /**
          * create token

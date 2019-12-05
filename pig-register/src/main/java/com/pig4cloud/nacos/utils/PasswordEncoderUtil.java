@@ -4,7 +4,7 @@ package com.pig4cloud.nacos.utils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * Password encoder tool
+ * 生成密码
  *
  * @author nacos
  */

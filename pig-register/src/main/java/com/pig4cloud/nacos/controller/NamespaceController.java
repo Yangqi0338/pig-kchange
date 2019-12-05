@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * namespace service
@@ -37,19 +40,16 @@ public class NamespaceController {
      */
     @GetMapping
     public RestResult<List<Namespace>> getNamespaces(HttpServletRequest request, HttpServletResponse response) {
-        RestResult<List<Namespace>> rr = new RestResult<List<Namespace>>();
-        rr.setCode(200);
         // TODO 获取用kp
         List<TenantInfo> tenantInfos = persistService.findTenantByKp("1");
         Namespace namespace0 = new Namespace("", "public", 200, persistService.configInfoCount(""), 0);
-        List<Namespace> namespaces = new ArrayList<Namespace>();
+
+        List<Namespace> namespaces = tenantInfos.stream().map(tenantInfo->new Namespace(tenantInfo.getTenantId(), tenantInfo.getTenantName(), 200,
+                persistService.configInfoCount(tenantInfo.getTenantId()), 2)).collect(toList());
         namespaces.add(namespace0);
-        for (TenantInfo tenantInfo : tenantInfos) {
-            int configCount = persistService.configInfoCount(tenantInfo.getTenantId());
-            Namespace namespaceTmp = new Namespace(tenantInfo.getTenantId(), tenantInfo.getTenantName(), 200,
-                configCount, 2);
-            namespaces.add(namespaceTmp);
-        }
+
+        RestResult<List<Namespace>> rr = new RestResult<List<Namespace>>();
+        rr.setCode(200);
         rr.setData(namespaces);
         return rr;
     }

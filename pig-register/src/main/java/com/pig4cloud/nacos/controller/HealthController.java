@@ -3,6 +3,7 @@ package com.pig4cloud.nacos.controller;
 
 import com.alibaba.nacos.config.server.service.PersistService;
 import com.alibaba.nacos.naming.controllers.OperatorController;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController("consoleHealth")
 @RequestMapping("/v1/console/health")
+@Slf4j
 public class HealthController {
-
-    private static final Logger logger = LoggerFactory.getLogger(HealthController.class);
 
     private final PersistService persistService;
     private final OperatorController apiCommands;
@@ -74,7 +74,7 @@ public class HealthController {
             persistService.configInfoCount("");
             return true;
         } catch (Exception e) {
-            logger.error("Config health check fail.", e);
+            log.error("Config health check fail.", e);
         }
         return false;
     }
@@ -84,7 +84,7 @@ public class HealthController {
             apiCommands.metrics(request);
             return true;
         } catch (Exception e) {
-            logger.error("Naming health check fail.", e);
+            log.error("Naming health check fail.", e);
         }
         return false;
     }

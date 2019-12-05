@@ -2,15 +2,14 @@
 package com.pig4cloud.nacos.controller;
 
 
-import com.alibaba.nacos.common.util.VersionUtils;
-import com.alibaba.nacos.core.utils.SystemUtils;
+import cn.hutool.core.lang.Dict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.alibaba.nacos.common.util.VersionUtils.VERSION;
+import static com.alibaba.nacos.core.utils.SystemUtils.*;
 
 /**
  * @author xingxuechao
@@ -22,12 +21,9 @@ public class ServerStateController {
 
     @GetMapping("state")
     public ResponseEntity serverState() {
-        Map<String,String> serverState = new HashMap<>(3);
-        serverState.put("standalone_mode",SystemUtils.STANDALONE_MODE ?
-            SystemUtils.STANDALONE_MODE_ALONE : SystemUtils.STANDALONE_MODE_CLUSTER);
 
-        serverState.put("function_mode", SystemUtils.FUNCTION_MODE);
-        serverState.put("version", VersionUtils.VERSION);
+        Dict serverState = new Dict(3).set("standalone_mode", STANDALONE_MODE ? STANDALONE_MODE_ALONE : STANDALONE_MODE_CLUSTER)
+                .set("function_mode", FUNCTION_MODE).set("version", VERSION);
 
         return ResponseEntity.ok().body(serverState);
     }
