@@ -16,6 +16,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
+        <docker.version>1.2.1</docker.version>
+        <!-- docket 容器地址(ip)-->
+        <registry.url></registry.url>
+        <!-- docket 容器地址(ip+端口号) 打包命令：mvn clean package docker:build ‐DpushImage 容器参数配置：其中ExecStart=后添加配置 ‐H tcp://0.0.0.0:2375 ‐H unix:///var/run/docker.sock-->
+        <docker.url></docker.url>
     </properties>
 
     <modules>
@@ -67,12 +72,31 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker.version}</version>
+                    <configuration>
+                        <imageName>${registry.url}:5000/${project.name}:0.0.1</imageName>
+                        <dockerHost>http://${docker.url}</dockerHost>
+                        <dockerDirectory>${project.basedir}</dockerDirectory>
+                        <resources>
+                            <resource>
+                                <targetPath>/</targetPath>
+                                <directory>${project.build.directory}</directory>
+                                <include>${project.build.finalName}.jar</include>
+                            </resource>
+                        </resources>
+                        <serverId>docker-hub</serverId>
+                        <registryUrl>https://index.docker.io/v1/</registryUrl>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <target>${maven.compiler.target}</target>
                     <source>${maven.compiler.source}</source>
@@ -138,5 +162,5 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-    
+
 </project>
