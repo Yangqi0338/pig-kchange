@@ -15,27 +15,30 @@
 
     <properties>
         <pig.version>2.4.4</pig.version>
-<!--        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>-->
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
-        <spring-cloud-alibaba.version>2.1.1.RELEASE</spring-cloud-alibaba.version>
-        <spring-platform.version>Cairo-SR8</spring-platform.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- 分布式版本控制 -->
+        <!--        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
+                <spring-cloud.version>Greenwich.SR4</spring-cloud.version>-->
+        <spring-cloud.version>Hoxton.SR2</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
         <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
-        <hutool.version>5.0.7</hutool.version>
-        <mica.version>1.2.0</mica.version>
-        <mybatis-plus.version>3.2.0</mybatis-plus.version>
+        <nacos.version>1.1.4</nacos.version>
+
+        <!-- spring boot 版本控制 -->
+        <spring-platform.version>Cairo-SR8</spring-platform.version>
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+
+        <!-- 工具版本控制 -->
+        <hutool.version>5.2.3</hutool.version>
+        <mica.version>1.2.1</mica.version>
+        <mica-auto.version>1.2.1</mica-auto.version>
+        <mybatis-plus.version>3.3.1</mybatis-plus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
         <velocity.version>2.1</velocity.version>
-        <jasypt.version>2.1.0</jasypt.version>
+        <jasypt.version>2.1.1</jasypt.version>
         <security.oauth.version>2.3.6.RELEASE</security.oauth.version>
         <swagger.fox.version>2.9.2</swagger.fox.version>
         <swagger-models.version>2.0.0-rc2</swagger-models.version>
-        <knife4j.version>1.9.6</knife4j.version>
-        <nacos.version>1.1.4</nacos.version>
+        <knife4j.version>2.0.1</knife4j.version>
         <jjwt.version>0.10.6</jjwt.version>
         <!--zipkin2.12.x需要此版本jooq-->
         <jooq.version>3.11.11</jooq.version>
@@ -43,6 +46,20 @@
         <zipkin-storage-mysql.version>2.8.4</zipkin-storage-mysql.version>
         <page-helper.version>1.2.13</page-helper.version>
         <txlcn.version>5.0.2.RELEASE</txlcn.version>
+        <activiti.version>5.22.0</activiti.version>
+
+        <!-- 容器打包 -->
+        <docker.registry>172.17.0.111</docker.registry>
+        <docker.host>http://172.17.0.111:2375</docker.host>
+        <docker.namespace>library</docker.namespace>
+        <docker.username>admin</docker.username>
+        <docker.password>Harbor12345</docker.password>
+        <docker.plugin.version>0.32.0</docker.plugin.version>
+
+        <!-- 项目信息配置 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
@@ -55,16 +72,21 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>net.dreamlu</groupId>
+                <artifactId>mica-auto</artifactId>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>io.spring.platform</groupId>
                 <artifactId>platform-bom</artifactId>
                 <version>${spring-platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -261,12 +283,13 @@
                 <version>${jjwt.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <!--knife4j是为Java MVC框架集成Swagger生成Api文档的增强-->
+            <!--knife4j是为Java MVC框架集成Swagger生成Api文档的增强 gateway-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+            <!--knife4j是为Java MVC框架集成Swagger生成Api文档的增强 client-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-micro-spring-boot-starter</artifactId>

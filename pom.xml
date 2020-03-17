@@ -15,12 +15,15 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
-        <docker.version>1.2.1</docker.version>
-        <!-- docket 容器地址(ip)-->
-        <registry.url></registry.url>
-        <!-- docket 容器地址(ip+端口号) 打包命令：mvn clean package docker:build ‐DpushImage 容器参数配置：其中ExecStart=后添加配置 ‐H tcp://0.0.0.0:2375 ‐H unix:///var/run/docker.sock-->
-        <docker.url></docker.url>
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+
+        <!-- 容器打包 -->
+        <docker.registry>172.17.0.111</docker.registry>
+        <docker.host>http://172.17.0.111:2375</docker.host>
+        <docker.namespace>library</docker.namespace>
+        <docker.username>admin</docker.username>
+        <docker.password>Harbor12345</docker.password>
+        <docker.plugin.version>0.32.0</docker.plugin.version>
     </properties>
 
     <modules>
@@ -61,9 +64,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-                    <configuration>
-                        <finalName>${project.build.finalName}</finalName>
-                    </configuration>
                     <executions>
                         <execution>
                             <goals>
@@ -73,22 +73,26 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>com.spotify</groupId>
+                    <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>${docker.version}</version>
+                    <version>${docker.plugin.version}</version>
                     <configuration>
-                        <imageName>${registry.url}:5000/${project.name}:0.0.1</imageName>
-                        <dockerHost>http://${docker.url}</dockerHost>
-                        <dockerDirectory>${project.basedir}</dockerDirectory>
-                        <resources>
-                            <resource>
-                                <targetPath>/</targetPath>
-                                <directory>${project.build.directory}</directory>
-                                <include>${project.build.finalName}.jar</include>
-                            </resource>
-                        </resources>
-                        <serverId>docker-hub</serverId>
-                        <registryUrl>https://index.docker.io/v1/</registryUrl>
+                        <dockerHost>${docker.host}</dockerHost>
+                        <registry>${docker.registry}</registry>
+                        <authConfig>
+                            <push>
+                                <username>${docker.username}</username>
+                                <password>${docker.password}</password>
+                            </push>
+                        </authConfig>
+                        <images>
+                            <image>
+                                <name>${docker.registry}/${docker.namespace}/${project.name}:${project.version}</name>
+                                <build>
+                                    <dockerFile>${project.basedir}/Dockerfile</dockerFile>
+                                </build>
+                            </image>
+                        </images>
                     </configuration>
                 </plugin>
             </plugins>
@@ -96,11 +100,12 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.8.0</version>
                 <configuration>
                     <target>${maven.compiler.target}</target>
                     <source>${maven.compiler.source}</source>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <encoding>UTF-8</encoding>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -162,5 +167,31 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
