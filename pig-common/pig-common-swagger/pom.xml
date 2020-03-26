@@ -14,7 +14,7 @@
 
     <dependencies>
         <!-- Swagger API文档 -->
-        <dependency>
+<!--        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-bean-validators</artifactId>
-        </dependency>
+        </dependency>-->
         <!--knife4j是为Java MVC框架集成Swagger生成Api文档的增强-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
@@ -69,6 +69,12 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-auto</artifactId>
+            <version>1.2.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

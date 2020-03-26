@@ -62,8 +62,13 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-auto</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-
+<!--  分布式事务处理-->
         <dependency>
             <groupId>com.codingapi.txlcn</groupId>
             <artifactId>txlcn-logger</artifactId>
