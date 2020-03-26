@@ -30,6 +30,7 @@
     </modules>
 
     <dependencyManagement>
+        <!-- 项目全局控制 -->
         <dependencies>
             <dependency>
                 <groupId>com.pig4cloud</groupId>
@@ -41,5 +42,5 @@
         </dependencies>
     </dependencyManagement>
 
-    
+
 </project>
