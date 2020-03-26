@@ -57,8 +57,8 @@ import java.util.concurrent.TimeUnit;
 @EnableAutoConfiguration
 @Import({TxLoggerConfiguration.class, MessageConfiguration.class})
 @EnableConfigurationProperties(TxManagerProperties.class)
-@EnableJpaRepositories("com.pig4cloud.common.affair.*")
-@EntityScan("com.pig4cloud.common.affair.*")
+@EnableJpaRepositories("com.pig4cloud.common.affair.mapper")
+@EntityScan("com.pig4cloud.common.affair.vo")
 public class TMAutoConfiguration {
 
     @Bean(destroyMethod = "shutdown")

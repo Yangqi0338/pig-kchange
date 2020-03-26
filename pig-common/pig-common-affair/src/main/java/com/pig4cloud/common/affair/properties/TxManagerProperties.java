@@ -19,7 +19,6 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -32,7 +31,7 @@ import java.util.Objects;
  * @author ujued
  */
 @Data
-@ConfigurationProperties(prefix = "tx-lcn.manager")
+@ConfigurationProperties(prefix = "spring.manager")
 public class TxManagerProperties implements Serializable {
 
 
@@ -40,7 +39,7 @@ public class TxManagerProperties implements Serializable {
 
     @Autowired
     public TxManagerProperties(ServerProperties serverProperties) {
-        this.port = Objects.requireNonNull(serverProperties.getPort(), "TM http port not configured?") + PORT_CHANGE_VALUE;
+        this.port = Objects.requireNonNull(serverProperties.getPort(), "未配置TM http端口") + PORT_CHANGE_VALUE;
     }
 
     /**

@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import static com.pig4cloud.pig.common.core.constant.SecurityConstants.FROM;
+import static com.pig4cloud.pig.common.core.constant.ServiceNameConstants.UMPS_SERVICE;
+
 /**
  * @author lengleng
  * @date 2019/2/1
  */
-@FeignClient(contextId = "remoteUserService", value = ServiceNameConstants.UMPS_SERVICE)
+@FeignClient(contextId = "remoteUserService", value = UMPS_SERVICE)
 public interface RemoteUserService {
 	/**
 	 * 通过用户名查询用户、角色信息
@@ -23,8 +26,7 @@ public interface RemoteUserService {
 	 * @return R
 	 */
 	@GetMapping("/user/info/{username}")
-	R<UserInfo> info(@PathVariable("username") String username
-		, @RequestHeader(SecurityConstants.FROM) String from);
+	R<UserInfo> info(@PathVariable("username") String username , @RequestHeader(FROM) String from);
 
 	/**
 	 * 通过社交账号查询用户、角色信息
