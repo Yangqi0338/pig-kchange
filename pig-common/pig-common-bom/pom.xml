@@ -3,29 +3,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <artifactId>pigx-cloud-dependencies-parent</artifactId>
+        <groupId>com.pig4cloud</groupId>
+        <version>Hoxton.SR2</version>
+        <relativePath/>
+    </parent>
+<!--    <parent>
         <artifactId>spring-cloud-dependencies-parent</artifactId>
         <groupId>org.springframework.cloud</groupId>
         <version>2.1.5.RELEASE</version>
         <relativePath/>
-    </parent>
+    </parent>-->
     <modelVersion>4.0.0</modelVersion>
+    <groupId>com.pig4cloud</groupId>
     <artifactId>pig-common-bom</artifactId>
     <version>${pig.version}</version>
     <packaging>pom</packaging>
 
     <properties>
         <pig.version>2.4.4</pig.version>
-<!--        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>-->
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
-        <spring-cloud-alibaba.version>2.1.1.RELEASE</spring-cloud-alibaba.version>
+        <!-- spring cloud 官方原版 版本管理(阿里和原版需要做版本切换)-->
+        <!--        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
+                <spring-cloud.version>Greenwich.SR4</spring-cloud.version>-->
+
+        <!-- spring cloud-alibaba 版本管理-->
+        <spring-cloud.version>Hoxton.SR2</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
+
+        <!-- spring boot 版本管理-->
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
         <spring-platform.version>Cairo-SR8</spring-platform.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!-- spring cloud-admin服务监控 版本管理-->
         <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
-        <hutool.version>5.0.7</hutool.version>
+
+        <!-- 第三方工具 版本管理-->
+        <hutool.version>5.2.3</hutool.version>
         <mica.version>1.2.0</mica.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
@@ -37,12 +50,33 @@
         <knife4j.version>1.9.6</knife4j.version>
         <nacos.version>1.1.4</nacos.version>
         <jjwt.version>0.10.6</jjwt.version>
+        <page-helper.version>1.2.13</page-helper.version>
+        <txlcn.version>5.0.2.RELEASE</txlcn.version>
+
         <!--zipkin2.12.x需要此版本jooq-->
         <jooq.version>3.11.11</jooq.version>
         <zipkin.version>2.12.2</zipkin.version>
         <zipkin-storage-mysql.version>2.8.4</zipkin-storage-mysql.version>
-        <page-helper.version>1.2.13</page-helper.version>
-        <txlcn.version>5.0.2.RELEASE</txlcn.version>
+
+        <!-- 容器信息 版本管理-->
+        <docker.registry>172.17.0.111</docker.registry>
+        <docker.host>http://172.17.0.111:2375</docker.host>
+        <docker.namespace>library</docker.namespace>
+        <docker.username>admin</docker.username>
+        <docker.password>Harbor12345</docker.password>
+        <docker.plugin.version>0.33.0</docker.plugin.version>
+
+        <!-- maven插件 版本管理-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven-compiler.version>3.8.1</maven-compiler.version>
+
+        <!-- spring-cloud-maven插件 版本管理-->
+        <spring-cloud-maven.version>1.1.1</spring-cloud-maven.version>
+
+        <!-- git-maven插件 版本管理-->
+        <git-commit.version>2.2.5</git-commit.version>
     </properties>
 
     <dependencyManagement>
@@ -327,6 +361,153 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker.plugin.version}</version>
+                    <configuration>
+                        <dockerHost>${docker.host}</dockerHost>
+                        <registry>${docker.registry}</registry>
+                        <authConfig>
+                            <push>
+                                <username>${docker.username}</username>
+                                <password>${docker.password}</password>
+                            </push>
+                        </authConfig>
+                        <images>
+                            <image>
+                                <name>${docker.registry}/${docker.namespace}/${project.name}:${project.version}</name>
+                                <build>
+                                    <dockerFile>${project.basedir}/Dockerfile</dockerFile>
+                                </build>
+                            </image>
+                        </images>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.pig4cloud.plugin</groupId>
+                    <artifactId>spring-cloud-maven-plugin</artifactId>
+                    <version>${spring-cloud-maven.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler.version}</version>
+                    <configuration>
+                        <target>${maven.compiler.target}</target>
+                        <source>${maven.compiler.source}</source>
+                        <encoding>UTF-8</encoding>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>${git-commit.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!--避免和parent bom坐标不一致 -->
+            <plugin>
+                <groupId>com.pig4cloud.plugin</groupId>
+                <artifactId>spring-cloud-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!--阿里云主仓库，代理了maven central和jcenter仓库-->
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!--阿里云代理Spring 官方仓库-->
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://maven.aliyun.com/repository/spring</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <!--阿里云代理Spring 插件仓库-->
+        <pluginRepository>
+            <id>spring-plugin</id>
+            <name>spring-plugin</name>
+            <url>https://maven.aliyun.com/repository/spring-plugin</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 
 </project>
