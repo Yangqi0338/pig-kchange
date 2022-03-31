@@ -32,7 +32,7 @@
         <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
 
         <!-- spring boot 版本管理-->
-        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <spring-boot.version>2.5.12</spring-boot.version>
         <spring-platform.version>Cairo-SR8</spring-platform.version>
 
         <!-- spring cloud-admin服务监控 版本管理-->
